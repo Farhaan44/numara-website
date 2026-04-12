@@ -178,7 +178,7 @@ export default function BeliefsSection() {
   }, []);
 
   const itemRefs = useRef<React.RefObject<HTMLDivElement>[]>(
-    SECTIONS.map(() => ({ current: null } as React.RefObject<HTMLDivElement>))
+    SECTIONS.map(() => ({ current: null } as unknown as React.RefObject<HTMLDivElement>))
   );
 
   useEffect(() => {
