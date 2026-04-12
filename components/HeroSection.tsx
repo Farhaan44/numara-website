@@ -128,7 +128,7 @@ export default function HeroSection() {
             preload="auto"
             style={{ width: "100%", height: "100%", objectFit: "cover" }}
           >
-            <source src="/constructionvid.mp4" type="video/mp4" />
+            <source src="/skylinevid.mp4" type="video/mp4" />
           </video>
         </div>
 
