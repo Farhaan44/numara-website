@@ -6,14 +6,15 @@ export default function HeroSection() {
   const [scrollY, setScrollY] = useState(0);
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
   
-  // 1. Create a reference for the video element
+  // 1. Ref kept for future use, but commented out logic below
   const videoRef = useRef<HTMLVideoElement>(null);
 
   useEffect(() => {
-    // 2. Set the playback speed (0.5 = slow motion, 1.0 = normal, 2.0 = fast)
+    /* 2. Commented out video playback speed since we are using an image
     if (videoRef.current) {
       videoRef.current.playbackRate = 0.75; 
     }
+    */
 
     const handleScroll = () => setScrollY(window.scrollY);
     const handleMouseMove = (e: MouseEvent) => {
@@ -108,7 +109,7 @@ export default function HeroSection() {
           backgroundColor: "#060402",
         }}
       >
-        {/* Background Video with Parallax */}
+        {/* Background Image with Parallax */}
         <div
           style={{
             position: "absolute",
@@ -119,8 +120,16 @@ export default function HeroSection() {
             filter: "contrast(1.05) brightness(0.9)",
           }}
         >
+          {/* 3. Using Image instead of Video */}
+          <img 
+            src="/heroskyline.jpg" 
+            alt="Numara Skyline Background" 
+            style={{ width: "100%", height: "100%", objectFit: "cover" }}
+          />
+
+          {/* Commented out video source as requested
           <video
-            ref={videoRef} // 3. Attach the ref
+            ref={videoRef}
             autoPlay 
             loop 
             muted 
@@ -129,7 +138,8 @@ export default function HeroSection() {
             style={{ width: "100%", height: "100%", objectFit: "cover" }}
           >
             <source src="/skylinevid.mp4" type="video/mp4" />
-          </video>
+          </video> 
+          */}
         </div>
 
         {/* 1. Subtle Center Clarity Mask */}
