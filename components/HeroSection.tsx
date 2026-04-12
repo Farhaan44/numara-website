@@ -122,7 +122,7 @@ export default function HeroSection() {
         >
           {/* 3. Using Image instead of Video */}
           <img 
-            src="/heroskyline.jpg" 
+            src="/heroskyline.png" 
             alt="Numara Skyline Background" 
             style={{ width: "100%", height: "100%", objectFit: "cover" }}
           />
