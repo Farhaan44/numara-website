@@ -1,0 +1,198 @@
+/* NumaraLoader.module.css */
+
+/* ─── Loader shell ─────────────────────────────────────────── */
+.loader {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: #F8F0E5;
+  background-image:
+    repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 3px,
+      rgba(120, 85, 45, 0.1) 3px,
+      rgba(120, 85, 45, 0.1) 4px
+    ),
+    repeating-linear-gradient(
+      90deg,
+      transparent,
+      transparent 3px,
+      rgba(120, 85, 45, 0.1) 3px,
+      rgba(120, 85, 45, 0.1) 4px
+    ),
+    repeating-linear-gradient(
+      45deg,
+      transparent,
+      transparent 5px,
+      rgba(120, 85, 45, 0.018) 5px,
+      rgba(120, 85, 45, 0.018) 6px
+    );
+  gap: 16px;
+  padding: 16px 16px;
+  animation: shrinkCircle 0.9s cubic-bezier(0.37, 0, 0.63, 1) 4.2s forwards;
+}
+
+@keyframes shrinkCircle {
+  0%   { clip-path: circle(150% at 50% 50%); }
+  100% { clip-path: circle(0%   at 50% 50%); }
+}
+
+/* ─── SVG stage ────────────────────────────────────────────── */
+.stage {
+  width: min(92vw, 1200px);
+  max-height: 70vh;
+  opacity: 0;
+  animation: fadeIn 0.2s ease 0s forwards;
+}
+
+.svg {
+  width: 100%;
+  height: 100%;
+  max-height: 70vh;
+  display: block;
+}
+
+/* ─── Base path style ──────────────────────────────────────── */
+.p {
+  fill: none;
+  stroke: #412c17;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* ─── Ground/platform — draws FIRST ────────────────────────── */
+.sg {
+  stroke-width: 4;
+  stroke-dasharray: 3896;
+  stroke-dashoffset: 3896;
+  animation: draw 0.55s cubic-bezier(0.4, 0, 0.2, 1) 0.05s both;
+}
+
+/* ─── Buildings — start after platform lands (~0.4s) ────────── */
+.s1 {
+  stroke-width: 4;
+  stroke-dasharray: 11157;
+  stroke-dashoffset: 11157;
+  animation: draw 2.7s cubic-bezier(0.22, 0.1, 0.08, 1) 0.45s both;
+}
+.s2 {
+  stroke-width: 4;
+  stroke-dasharray: 3844;
+  stroke-dashoffset: 3844;
+  animation: draw 2.4s cubic-bezier(0.22, 0.1, 0.08, 1) 0.38s both;
+}
+.s3 {
+  stroke-width: 3;
+  stroke-dasharray: 9933;
+  stroke-dashoffset: 9933;
+  animation: draw 2.3s cubic-bezier(0.22, 0.1, 0.08, 1) 0.52s both;
+}
+.s4 {
+  stroke-width: 4;
+  stroke-dasharray: 6852;
+  stroke-dashoffset: 6852;
+  animation: draw 2.8s cubic-bezier(0.22, 0.1, 0.08, 1) 0.35s both;
+}
+.s5 {
+  stroke-width: 4;
+  stroke-dasharray: 11362;
+  stroke-dashoffset: 11362;
+  animation: draw 2.6s cubic-bezier(0.22, 0.1, 0.08, 1) 0.42s both;
+}
+.s6 {
+  stroke-width: 4;
+  stroke-dasharray: 5532;
+  stroke-dashoffset: 5532;
+  animation: draw 2.1s cubic-bezier(0.22, 0.1, 0.08, 1) 0.40s both;
+}
+
+@keyframes draw {
+  to { stroke-dashoffset: 0; }
+}
+
+/* ─── Brand text ────────────────────────────────────────────── */
+.textblock {
+  text-align: center;
+}
+
+.heading {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-weight: 600;
+  font-size: clamp(52px, 10vw, 72px);
+  color: #412c17;
+  letter-spacing: 0.1em;
+  line-height: 1;
+  text-transform: uppercase;
+  overflow: hidden;
+  display: block;
+}
+
+/* Each letter span — staggered via inline animation-delay set in JSX */
+.letter {
+  display: inline-block;
+  opacity: 0;
+  transform: translateY(70%) skewX(-8deg);
+  animation: letterIn 0.45s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes letterIn {
+  to {
+    opacity: 1;
+    transform: translateY(0) skewX(0deg);
+  }
+}
+
+/* Slogan row: rules expand + text fades just after last letter */
+.sloganWrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  margin-top: 10px;
+}
+
+.rule {
+  flex: 1;
+  max-width: 56px;
+  height: 2px;
+  background: #c2a170;
+  transform-origin: center;
+  transform: scaleX(0);
+  opacity: 0;
+  animation: ruleIn 0.5s cubic-bezier(0.22, 1, 0.36, 1) 1.55s forwards;
+}
+
+@keyframes ruleIn {
+  to { transform: scaleX(1); opacity: 0.65; }
+}
+
+.slogan {
+  font-family: 'Lato', sans-serif;
+  font-weight: 500;
+  font-size: clamp(13px, 4vw, 18px);
+  color: #7a5c3a;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  opacity: 0;
+  animation: fadeIn 0.45s ease 1.52s forwards;
+}
+
+/* ─── Shared keyframes ──────────────────────────────────────── */
+@keyframes fadeIn {
+  to { opacity: 1; }
+}
+
+/* ─── Reduced motion ────────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  .loader     { animation: none; clip-path: none; }
+  .stage      { opacity: 1; animation: none; }
+  .p          { stroke-dashoffset: 0; animation: none; }
+  .letter     { opacity: 1; transform: none; animation: none; }
+  .rule       { transform: scaleX(1); opacity: 0.65; animation: none; }
+  .slogan     { opacity: 1; animation: none; }
+}

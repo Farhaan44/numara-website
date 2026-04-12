@@ -1,5 +1,6 @@
 "use client";
 
+
 import { useEffect, useRef, useState } from "react";
 
 const SLIDES = [
@@ -34,8 +35,8 @@ const SLIDES = [
   {
     id: 5,
     image: "/slider/slide5.png",
-    bg: "#1a0006",
-    heading: "ELEVATING LIFESTYLES.\nARCHITECTING DISTINCTION",
+    bg: "#3a2a2a",
+    heading: "ARCHITECTING\nDISTINCTION",
     quote: "At Numara, each development is crafted with the intent to endure by combining timeless design with structural integrity.",
   },
 ];
@@ -82,7 +83,26 @@ export default function SlidingSection() {
           background: #0d0d0d;
         }
 
-
+        .sl-deco {
+          position: absolute;
+          top: 0;
+          bottom: 0;
+          right: 0;
+          width: 20%;
+          z-index: 1;
+          pointer-events: none;
+          opacity: 0.08;
+        }
+        .sl-deco img {
+          position: absolute;
+          top: 0;
+          right: 0;
+          width: 100%;
+          height: 100%;
+          display: block;
+          object-fit: contain;
+          object-position: right center;
+        }
 
         /* ── Portrait image: left, not full height ── */
         .sl-images {
@@ -90,7 +110,7 @@ export default function SlidingSection() {
           left: 0;
           top: 50%;
           transform: translateY(-50%);
-          width: 55%;
+          width: 65%;
           aspect-ratio: 3 / 4;
           max-height: 92%;
           z-index: 2;
@@ -116,7 +136,7 @@ export default function SlidingSection() {
           background:
             linear-gradient(to right, transparent 55%, rgba(0,0,0,0.9) 100%),
             linear-gradient(to bottom, rgba(0,0,0,0.6) 0%, transparent 20%, transparent 80%, rgba(0,0,0,0.6) 100%),
-            linear-gradient(to left, transparent 60%, rgba(0,0,0,0.4) 100%);
+            linear-gradient(to left, transparent 60%, rgba(0,0,0,0.6) 100%);
           z-index: 3;
           pointer-events: none;
         }
@@ -238,7 +258,11 @@ export default function SlidingSection() {
             height: 60svh;
             min-height: 480px;
             align-items: flex-end;
+
           }
+            .sl-deco {
+              opacity:0;
+            }
 
           /* Image: full bleed, overlaps with text area */
           .sl-images {
@@ -345,6 +369,12 @@ export default function SlidingSection() {
         <div className="sl-prog">
           <div key={idx} className="sl-prog-fill" />
         </div>
+
+        <div className="sl-deco" aria-hidden="true">
+          <img src="/numaratall1.svg" alt="" />
+        </div>
+
+        
 
       </div>
     </>

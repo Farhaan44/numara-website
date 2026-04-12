@@ -1,9 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import Link from "next/link";
 
-// ── Animated counter hook ──────────────────────────────────────────
 function useCounter(target: number, duration: number, started: boolean) {
   const [count, setCount] = useState(0);
   useEffect(() => {
@@ -21,370 +19,410 @@ function useCounter(target: number, duration: number, started: boolean) {
   return count;
 }
 
-// ── Icons ─────────────────────────────────────────────────────────
-const YearsIcon = () => (
-  <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#ffffff" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round">
-    <rect x="3" y="4" width="18" height="18" rx="2"/>
-    <line x1="16" y1="2" x2="16" y2="6"/>
-    <line x1="8" y1="2" x2="8" y2="6"/>
-    <line x1="3" y1="10" x2="21" y2="10"/>
-    <circle cx="8" cy="16" r="1" fill="#ffffff" stroke="none"/>
-    <circle cx="12" cy="16" r="1" fill="#ffffff" stroke="none"/>
-    <circle cx="16" cy="16" r="1" fill="#ffffff" stroke="none"/>
-  </svg>
-);
+const STATS = [
+  {
+    value: 15,
+    suffix: "+",
+    label: "Years of Excellence",
+    sub: "Trust & Integrity",
+    icon: (
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#776251" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+        <circle cx="12" cy="12" r="10"/>
+        <polyline points="12 6 12 12 16 14"/>
+      </svg>
+    ),
+  },
+  {
+    value: 120,
+    suffix: "K+",
+    label: "Sq. Ft. Delivered",
+    sub: "Residential & Commercial",
+    icon: (
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#776251" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M3 21h18"/>
+        <path d="M5 21V7l7-4 7 4v14"/>
+        <path d="M9 21v-6h6v6"/>
+      </svg>
+    ),
+  },
+  {
+    value: 500,
+    suffix: "+",
+    label: "Happy Clients",
+    sub: "Trusted by Families",
+    icon: (
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#776251" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+        <circle cx="9" cy="7" r="4"/>
+        <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+        <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+      </svg>
+    ),
+  },
+];
 
-const SqftIcon = () => (
-  <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#ffffff" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round">
-    <rect x="3" y="3" width="12" height="18" rx="1"/>
-    <rect x="15" y="8" width="6" height="13" rx="1"/>
-    <rect x="7" y="15" width="4" height="6" rx="0.5"/>
-    <line x1="7" y1="8" x2="11" y2="8"/>
-    <line x1="7" y1="11" x2="11" y2="11"/>
-  </svg>
-);
-
-const ClientsIcon = () => (
-  <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#ffffff" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round">
-    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
-    <circle cx="9" cy="7" r="4"/>
-    <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
-    <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
-  </svg>
-);
-
-// ── Stat Card ─────────────────────────────────────────────────────
-function StatItem({
-  icon, value, suffix, label, sub, started, delay,
+function StatCard({
+  stat,
+  started,
+  index,
 }: {
-  icon: React.ReactNode; value: number; suffix: string; label: string;
-  sub: string; started: boolean; delay: number;
+  stat: typeof STATS[0];
+  started: boolean;
+  index: number;
 }) {
-  const count = useCounter(value, 2000, started);
+  const count = useCounter(stat.value, 2200, started);
+  const cardRef = useRef<HTMLDivElement>(null);
+
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    const card = cardRef.current;
+    if (!card) return;
+    const rect = card.getBoundingClientRect();
+    const x = ((e.clientX - rect.left) / rect.width - 0.5) * 12;
+    const y = ((e.clientY - rect.top) / rect.height - 0.5) * -12;
+    card.style.transform = `perspective(900px) rotateX(${y}deg) rotateY(${x}deg) translateY(-4px)`;
+  };
+
+  const handleMouseLeave = () => {
+    if (cardRef.current)
+      cardRef.current.style.transform = `perspective(900px) rotateX(0deg) rotateY(0deg) translateY(0)`;
+  };
+
   return (
-    <div className="stat-item" style={{ transitionDelay: `${delay}ms` }}>
-      <div className="stat-icon">{icon}</div>
-      <p className="stat-number">{count}{suffix}</p>
-      <p className="stat-label">{label}</p>
-      <p className="stat-sub">{sub}</p>
+    <div
+      className="ss-card"
+      ref={cardRef}
+      style={{
+        transitionDelay: `${0.15 + index * 0.12}s`,
+      }}
+      onMouseMove={handleMouseMove}
+      onMouseLeave={handleMouseLeave}
+    >
+      {/* Rotating border beam */}
+      <div className="ss-beam" />
+
+      {/* Card face */}
+      <div className="ss-card-face">
+        <div className="ss-icon">{stat.icon}</div>
+        <p className="ss-number">
+          {count}
+          <span className="ss-suffix">{stat.suffix}</span>
+        </p>
+        <p className="ss-label">{stat.label}</p>
+        <p className="ss-sub">{stat.sub}</p>
+      </div>
     </div>
   );
 }
 
-// ── Stats Section ─────────────────────────────────────────────────
 export default function StatsSection() {
   const sectionRef = useRef<HTMLDivElement>(null);
+  const bgRef = useRef<HTMLDivElement>(null);
   const [started, setStarted] = useState(false);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
       ([entry]) => { if (entry.isIntersecting) setStarted(true); },
-      { threshold: 0.2 }
+      { threshold: 0.15 }
     );
     if (sectionRef.current) observer.observe(sectionRef.current);
     return () => observer.disconnect();
   }, []);
 
+  useEffect(() => {
+    const onScroll = () => {
+      const section = sectionRef.current;
+      const bg = bgRef.current;
+      if (!section || !bg) return;
+      const rect = section.getBoundingClientRect();
+      const offset = (rect.top + rect.height / 2 - window.innerHeight / 2) * 0.22;
+      bg.style.transform = `translateY(${offset}px)`;
+    };
+    window.addEventListener("scroll", onScroll, { passive: true });
+    onScroll();
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
   return (
     <>
       <style>{`
-        .stats-section {
-          background: #FFFFFF;
-          
-          background-image:
-            linear-gradient(to right, #e0d1c1 1px, transparent 1px),
-            linear-gradient(to bottom, #e0d1c1 1px, transparent 1px);
-          background-size: 40px 40px;
-          padding: 80px 6vw;
-          display: flex;
-          align-items: center;
-          gap: 0;
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,700;1,400;1,500&family=Lato:wght@300;400;700&display=swap');
+
+        :root {
+          --ss-bg:       #F8F0E5;
+          --ss-fg:       #412c17;
+          --ss-primary:  #412c17;
+          --ss-secondary:#776251;
+          --ss-accent:   #C2A170;
+          --ss-muted:    #F1ECE7;
+          --ss-border:   #DBD3CB;
+        }
+
+        /* ── Section wrapper ── */
+        .ss-section {
           position: relative;
           overflow: hidden;
-        }
-        
-        .stats-section::after {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background: radial-gradient(ellipse at center, transparent 20%, white 100%);
-            pointer-events: none;
-            z-index: 0;
-          }
-        
-
-        /* ── Left: Quote side ── */
-        .stats-left {
-          flex: 0 0 40%;
-          max-width: 440px;
-          z-index:1;
-          padding-right: 6vw;
-          opacity: 0;
-          transform: translateX(-20px);
-          transition: opacity 0.7s ease, transform 0.7s ease;
-        }
-        .stats-section.visible .stats-left {
-          opacity: 1;
-          transform: none;
+          padding: 120px 6vw 100px;
+          background: var(--ss-bg);
         }
 
-        .stats-eyebrow {
-          font-family: 'Georgia', serif;
-          font-size: clamp(1.7rem, 2.5vw, 2rem);
-          font-weight: 700;
-          letter-spacing: 0.18em;
-          text-transform: uppercase;
-          color: #c8907e;
-          margin-bottom: 20px;
-          display: inline-block;
-          border-bottom: 2.5px solid #c8907e;
-          
-          line-height: 1.2;
+        /* Thin luxury lines top and bottom */
+        .ss-line-top {
+          position: absolute;
+          top: 10px; left: 0; right: 0;
+          height: 1.5px;
+          background: var(--ss-accent);
+          opacity: 0.9;
+          pointer-events: none;
+          z-index: 2;
+        }
+        .ss-line-bottom {
+          position: absolute;
+          bottom: 0px; left: 0; right: 0;
+          height: 1px;
+          background: var(--ss-accent);
+          opacity: 0.9;
+          pointer-events: none;
+          z-index: 2;
         }
 
-        .stats-heading {
-          font-family: 'Georgia', serif;
-          font-size: clamp(1.3rem, 1.5rem, 1.7rem);
-          font-weight: 700;
-          color: #2d343c;
-          line-height: 1.25;
-          letter-spacing: 0.02em;
-          text-transform: uppercase;
-          margin: 0 0 24px;
+        /* ── Parallax photo bg ── */
+        .ss-parallax-bg {
+          position: absolute;
+          inset: -26% 0;
+          background-image: url('/statsbg.jpg');
+          background-size: cover;
+          background-position: center;
+          opacity: 0.7;
+          will-change: transform;
+          z-index: 0;
         }
 
-        .stats-description {
-          font-family: 'Georgia', serif;
-          font-size: 1.2rem;
-          color: #6b7280;
-          line-height: 1.8;
-          margin-bottom: 32px;
-          font-style: italic;
+        /* ── Subtle noise grain overlay ── */
+        .ss-section::before {
+          content: '';
+          position: absolute; inset: 0; z-index: 1; pointer-events: none;
+          background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.035'/%3E%3C/svg%3E");
+          background-size: 200px 200px;
+          opacity: 0.4;
         }
 
-        .stats-link {
-          display: inline-flex;
-          align-items: center;
-          gap: 8px;
-          font-family: 'Georgia', serif;
-          font-size: 1.2rem;
-          font-weight: 700;
-          letter-spacing: 0.12em;
-          color: #c8907e;
-          text-decoration: none;
-          text-transform: uppercase;
-          transition: gap 0.3s ease, color 0.3s ease;
-        }
-        .stats-link:hover {
-          gap: 14px;
-          color: #a87060;
-        }
-        .stats-link-arrow {
-          transition: transform 0.3s ease;
-        }
-        .stats-link:hover .stats-link-arrow {
-          transform: translateX(4px);
-        }
-
-        /* ── Right: Stats cards ── */
-        .stats-right {
-          flex: 1;
-          z-index:1;
-          display: flex;
-          align-items: stretch;
-          gap: 20px;
-          padding-left: 6vw;
-        }
-
-        /* ── Each stat card ── */
-        .stat-item {
-          flex: 1;
-          background: linear-gradient(145deg, #b5a48a 0%, #9e8f76 40%, #8a7a62 100%);
-          border-radius: 16px;
-          padding: 36px 28px;
-          box-shadow:
-            0 2px 8px rgba(45, 52, 60, 1.5),
-            0 8px 24px rgba(45, 52, 60, 0.8);
-          opacity: 0;
-          transform: translateY(20px);
-          transition:
-            opacity 0.6s ease,
-            transform 0.6s ease,
-            box-shadow 0.35s ease,
-            background 0.35s ease;
-          cursor: default;
-          position: relative;
-          overflow: hidden;
+        /* ── Inner layout ── */
+        .ss-inner {
+          position: relative; z-index: 2;
+          max-width: 1060px;
+          margin: 0 auto;
           display: flex;
           flex-direction: column;
-          align-items: center;   /* centre everything */
-          text-align: center;
+          align-items: center;
+          gap: 0;
         }
 
-        /* rose gold top accent line */
-        .stat-item::before {
-          content: '';
-          position: absolute;
-          top: 0; left: 0; right: 0;
-          height: 3px;
-          background: linear-gradient(to right, #c8907e, #e8c4b0);
-          border-radius: 16px 16px 0 0;
+        /* ── Cards row ── */
+        .ss-cards {
+          display: flex;
+          gap: 28px;
+          width: 100%;
+          align-items: stretch;
+        }
+
+        /* ── Individual card ── */
+        .ss-card {
+          flex: 1;
+          border-radius: 2px;
+          position: relative;
+          overflow: hidden;
           opacity: 0;
-          transition: opacity 0.35s ease;
+          transform: translateY(24px);
+          transition: opacity 0.6s ease, transform 0.6s ease, box-shadow 0.3s ease;
+          transform-style: preserve-3d;
+          will-change: transform;
+          background: var(--ss-muted);
+          cursor: default;
+          display: flex;
+          flex-direction: column;
+        }
+        .ss-section.visible .ss-card { opacity: 1; transform: translateY(0); }
+        .ss-card:hover {
+          box-shadow: 0 20px 56px rgba(73,54,43,0.10), 0 2px 8px rgba(73,54,43,0.06);
         }
 
-        .stats-section.visible .stat-item {
-          opacity: 1;
-          transform: none;
+        /* Rotating conic border beam — three named keyframes, one per card */
+        @keyframes ss-beam-0 {
+          from { transform: translate(-50%,-50%) rotate(0deg); }
+          to   { transform: translate(-50%,-50%) rotate(360deg); }
+        }
+        @keyframes ss-beam-1 {
+          from { transform: translate(-50%,-50%) rotate(120deg); }
+          to   { transform: translate(-50%,-50%) rotate(480deg); }
+        }
+        @keyframes ss-beam-2 {
+          from { transform: translate(-50%,-50%) rotate(240deg); }
+          to   { transform: translate(-50%,-50%) rotate(600deg); }
+        }
+        .ss-beam {
+          position: absolute;
+          width: 220%; height: 220%;
+          top: 50%; left: 50%;
+          background: conic-gradient(
+            from 0deg,
+            transparent 0deg,
+            transparent 338deg,
+            rgba(194,161,112,1) 345deg,
+            rgba(194,161,112,0.8) 352deg,
+            rgba(194,161,112,0.9) 356deg,
+            rgba(194,161,112,1) 359deg,
+            transparent 360deg
+          );
+          z-index: 0;
+          pointer-events: none;
+        }
+        .ss-card:nth-child(1) .ss-beam { animation: ss-beam-0 8s linear infinite; }
+        .ss-card:nth-child(2) .ss-beam { animation: ss-beam-1 8s linear infinite; }
+        .ss-card:nth-child(3) .ss-beam { animation: ss-beam-2 8s linear infinite; }
+
+        /* Card face sits above beam */
+        .ss-card-face {
+          position: relative; z-index: 1;
+          margin: 1.5px;
+          border-radius: 1px;
+          background: #ffffff;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          text-align: center;
+          padding: 52px 32px 44px;
+          gap: 0;
+          transition: background 0.3s ease;
+          flex: 1;
+        }
+        .ss-card:hover .ss-card-face {
+          background: #e4d9cc;
         }
 
-        .stat-item:hover {
-          background: linear-gradient(145deg, #c0ae92 0%, #a89880 40%, #948270 100%);
-          box-shadow:
-            0 8px 32px rgba(45, 52, 60, 0.5),
-            0 20px 48px rgba(200, 144, 126, 0.12);
-          transform: translateY(-6px);
-        }
-        .stat-item:hover::before {
-          opacity: 1;
-        }
-
-        /* ── Icon centred above number ── */
-        .stat-icon {
-          margin-bottom: 14px;
+        /* Icon */
+        .ss-icon {
+          color: var(--ss-accent);
+          opacity: 0.9;
+          margin-bottom: 8px;
           display: flex;
           align-items: center;
           justify-content: center;
-          width: 60px;
-          height: 60px;
+          width: 64px; height: 60px;
+          border: 2px solid var(--ss-accent);
           border-radius: 50%;
-          background: rgba(255,255,255,0.15);
-          transition: background 0.3s ease;
+          flex-shrink: 0;
         }
-        .stat-item:hover .stat-icon {
-          background: rgba(255,255,255,0.22);
+        .ss-card:hover .ss-icon {
+          border-color: var(--ss-secondary);
+          opacity: 1;
         }
 
-        .stat-number {
-          font-family: 'Georgia', serif;
-          font-size: clamp(2rem, 3.5vw, 3rem);
-          font-weight: 700;
-          color: #ffffff;
+        /* Number */
+        .ss-number {
+          font-family: 'Playfair Display', serif;
+          font-size: clamp(3rem, 4.5vw, 4.2rem);
+          font-weight: 400;
+          color: var(--ss-primary);
           line-height: 1;
           letter-spacing: -0.02em;
-          margin: 0 0 14px;
-          transition: color 0.3s ease;
+          margin: 0 0 16px;
         }
-        .stat-item:hover .stat-number {
-          color: rgba(255,255,255,0.85);
+        .ss-suffix {
+          font-size: 0.6em;
+          font-weight: 400;
+          color: var(--ss-accent);
+          vertical-align: baseline;
+          letter-spacing: 0;
+          margin-left: 3px;
         }
 
-        .stat-label {
-          font-family: 'Georgia', serif;
-          font-size: 0.68rem;
+        /* Label */
+        .ss-label {
+          font-family: 'Lato', sans-serif;
+          font-size: 0.8rem;
           font-weight: 700;
-          letter-spacing: 0.2em;
+          letter-spacing: 0.24em;
           text-transform: uppercase;
-          color: rgba(255,255,255,0.85);
-          margin: 0 0 8px;
-          line-height: 1.5;
+          color: var(--ss-fg);
+          margin: 0 0 10px;
         }
 
-        .stat-sub {
-          font-family: 'Georgia', serif;
-          font-size: 0.75rem;
-          color: rgba(255,255,255,0.75);
+        /* Sub */
+        .ss-sub {
+          font-family: 'Lato', sans-serif;
+          font-size: 0.9rem;
+          font-weight: 300;
+          color: var(--ss-secondary);
           letter-spacing: 0.04em;
           margin: 0;
-          line-height: 1.5;
-          font-style: italic;
         }
+
+        /* ── Dividers between cards ── */
+        .ss-cards > .ss-card + .ss-card::before {
+          content: '';
+          position: absolute;
+          left: -14px; top: 20%; bottom: 20%;
+          width: 1px;
+          background: var(--ss-border);
+          pointer-events: none;
+        }
+
+        /* ── Bottom caption ── */
+        .ss-caption {
+          font-family: 'Lato', sans-serif;
+          font-size: 1.7rem;
+          font-weight: 500;
+          font-style: normal;
+          color: #412c17;
+          text-align: center;
+          margin-top: 52px;
+          letter-spacing: 0.02em;
+          opacity: 0;
+          transition: opacity 0.6s ease 0.6s;
+        }
+        .ss-section.visible .ss-caption { opacity: 1; }
 
         /* ── Responsive ── */
-        @media (max-width: 900px) {
-          .stats-section {
-            flex-direction: column;
-            align-items: flex-start;
-            padding: 60px 5vw;
-            gap: 40px;
-          }
-          .stats-left {
-            flex: none;
-            width: 100%;
-            max-width: 100%;
-            padding-right: 0;
-          }
-          .stats-right {
-            width: 100%;
-            padding-left: 0;
-          }
+        @media (max-width: 700px) {
+          .ss-section { padding: 60px 3vw 60px; }
+          .ss-cards { gap: 8px; }
+          .ss-cards > .ss-card + .ss-card::before { display: none; }
+          .ss-card-face { padding: 22px 10px 20px; }
+          .ss-icon { width: 40px; height: 40px; margin-bottom: 6px; }
+          .ss-icon svg { width: 16px; height: 16px; }
+          .ss-number { font-size: 1.9rem; margin-bottom: 8px; }
+          .ss-label { font-size: 0.52rem; letter-spacing: 0.12em; margin-bottom: 5px; }
+          .ss-sub { font-size: 0.62rem; }
+          .ss-caption { font-size: 1rem; margin-top: 28px; }
         }
 
-        @media (max-width: 560px) {
-          .stats-section { padding: 48px 5vw; gap: 32px; }
-          .stats-right {
-            flex-direction: column;
-            gap: 16px;
-          }
-          .stat-item {
-            padding: 28px 24px;
-          }
+        @media (max-width: 380px) {
+          .ss-cards { gap: 5px; }
+          .ss-card-face { padding: 18px 8px 16px; }
+          .ss-number { font-size: 1.6rem; }
+          .ss-label { font-size: 0.46rem; }
+          .ss-icon { width: 34px; height: 34px; }
         }
       `}</style>
 
       <section
-        className={`stats-section${started ? " visible" : ""}`}
+        className={`ss-section${started ? " visible" : ""}`}
         ref={sectionRef}
       >
-        {/* ── Left: Quote ── */}
-        <div className="stats-left">
-          <span className="stats-eyebrow">Our Legacy</span>
-          <h2 className="stats-heading">
-            The Evolution of<br />an Enduring<br />Partnership
-          </h2>
-          <p className="stats-description">
-            Numara Group was founded with a single mission — to craft spaces
-            that stand as landmarks of trust, quality, and lasting value
-            for the communities we serve.
-          </p>
-          <Link href="/about" className="stats-link">
-            About Us
-            <svg className="stats-link-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <line x1="5" y1="12" x2="19" y2="12"/>
-              <polyline points="12 5 19 12 12 19"/>
-            </svg>
-          </Link>
-        </div>
+        <div className="ss-parallax-bg" ref={bgRef} />
+        
+        <div className="ss-line-bottom" />
 
-        {/* ── Right: Stat Cards ── */}
-        <div className="stats-right">
-          <StatItem
-            icon={<YearsIcon />}
-            value={15}
-            suffix="+"
-            label="Years of Trust & Integrity"
-            sub="Founded 2008"
-            started={started}
-            delay={100}
-          />
-          <StatItem
-            icon={<SqftIcon />}
-            value={120}
-            suffix="K+"
-            label="Sq. Ft. Delivered Successfully"
-            sub="Residential & Commercial"
-            started={started}
-            delay={220}
-          />
-          <StatItem
-            icon={<ClientsIcon />}
-            value={500}
-            suffix="+"
-            label="Happy Clients Across the Region"
-            sub="Trusted by families"
-            started={started}
-            delay={340}
-          />
+        <div className="ss-inner">
+          <div className="ss-cards">
+            {STATS.map((stat, i) => (
+              <StatCard key={i} stat={stat} started={started} index={i} />
+            ))}
+          </div>
+
+          <p className="ss-caption">
+            Nearly two decades of refined development across Mumbai
+          </p>
         </div>
       </section>
     </>
