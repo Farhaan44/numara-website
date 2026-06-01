@@ -100,7 +100,7 @@ export function ContactSection() {
         {/* ==========================================
             RIGHT COLUMN: The Form Card
             ========================================== */}
-        <div style={{ flex: "1 1 min(100%, 550px)" }}> 
+        <div style={{ flex: "1 1 min(100%, 450px)" }}> 
           <form
             onSubmit={handleSubmit}
             style={{
