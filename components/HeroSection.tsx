@@ -155,7 +155,7 @@ export default function HeroSection() {
             muted
             playsInline
             preload="auto"
-            poster="/anzarelegance.png"
+            poster="/anzarelegancehd.jpg"
             onCanPlay={() => setLoaded(true)}
           >
             <source src="/anzarelegancevid2.mp4" type="video/mp4" />
