@@ -147,7 +147,7 @@ const PROJECTS = [
   {
     id: 2,
     slug: "sea-senate",
-    title: "Sea Senate",
+    title: "Blue Ocean",
     category: "Residential | Commercial",
     location: "Agripada, Mumbai",
     status: "Ongoing",

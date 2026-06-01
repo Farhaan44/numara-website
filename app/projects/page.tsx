@@ -1,8 +1,4 @@
-import Image from "next/image";
-import StatsSection from "@/components/StatsSection";
-import ProjectsSection from "@/components/ProjectsSection";
-import SlidingSection from "@/components/SlidingSection";
-import MapSection from "@/components/MapSection";
+
 import {ProjectTab} from "@/components/ProjectTab";
 import { SectionDivider } from "@/components/SectionDivider";
 import { CTASection } from "@/components/CTASection";

@@ -19,6 +19,13 @@ export default function NumaraLoader() {
     return () => clearTimeout(timer);
   }, []);
 
+  useEffect(() => {
+  document.body.style.overflow = 'hidden';
+  return () => {
+    document.body.style.overflow = '';
+  };
+}, []);
+
   if (hidden) return null;
 
   return (

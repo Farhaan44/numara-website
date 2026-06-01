@@ -39,7 +39,7 @@ const projects: Project[] = [
   {
     id: "2",
     slug: "sea-senate",
-    name: "Sea Senate",
+    name: "Blue Ocean",
     status: "ongoing",
     type: "mixed",
     location: "Agripada, Mumbai",

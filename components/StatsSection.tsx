@@ -192,7 +192,7 @@ export default function StatsSection() {
           background-image: url('/statsbg.jpg');
           background-size: cover;
           background-position: center;
-          opacity: 0.7;
+          opacity: 0.8;
           will-change: transform;
           z-index: 0;
         }

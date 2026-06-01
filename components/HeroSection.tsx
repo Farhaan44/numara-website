@@ -1,209 +1,195 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 
 export default function HeroSection() {
-  const [scrollY, setScrollY] = useState(0);
-  const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
-  
-  // 1. Ref kept for future use, but commented out logic below
-  const videoRef = useRef<HTMLVideoElement>(null);
+  const [loaded, setLoaded] = useState(false);
+  const [visible, setVisible] = useState(false);
+  const [time, setTime] = useState(0);
 
   useEffect(() => {
-    /* 2. Commented out video playback speed since we are using an image
-    if (videoRef.current) {
-      videoRef.current.playbackRate = 0.75; 
-    }
-    */
+    const video = document.querySelector(".h-video-wrap video") as HTMLVideoElement;
+    if (!video) return;
+    const updateTime = () => setTime(video.currentTime);
+    video.addEventListener("timeupdate", updateTime);
+    return () => video.removeEventListener("timeupdate", updateTime);
+  }, [loaded]);
 
-    const handleScroll = () => setScrollY(window.scrollY);
-    const handleMouseMove = (e: MouseEvent) => {
-      const x = (e.clientX / window.innerWidth) * 2 - 1;
-      const y = (e.clientY / window.innerHeight) * 2 - 1;
-      setMousePos({ x, y });
-    };
+  // Delay the fade-in to sync with loader circle shrink at 4.2s
+  // Fade duration is 1.2s, so start at 3.0s → fully visible at 4.2s
+  useEffect(() => {
+    if (!loaded) return;
+    const timer = setTimeout(() => setVisible(true), 4200);
+    return () => clearTimeout(timer);
+  }, [loaded]);
 
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    window.addEventListener("mousemove", handleMouseMove);
-    return () => {
-      window.removeEventListener("scroll", handleScroll);
-      window.removeEventListener("mousemove", handleMouseMove);
-    };
-  }, []);
+  const showFirstText = time > 0.7 && time < 5.5;
+  const firstTextPhase = time < 1.3 ? "enter" : time > 4.9 ? "exit" : "stable";
+  const showSecondText = time >= 6.5 && time < 10.5;
+  const secondTextPhase = time < 7.1 ? "enter" : time > 9.9 ? "exit" : "stable";
 
   return (
     <>
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600&family=Lato:wght@300;400;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Anton&display=swap');
 
-        .hero-title-main {
-          font-family: 'Playfair Display', serif;
-          font-size: clamp(2.8rem, 8vw, 6.5rem);
-          font-weight: 500;
-          color: #ffffff;
-          line-height: 1.1;
-          margin: 0;
-          letter-spacing: -0.01em;
-          text-shadow: 
-            0 2px 4px rgba(0,0,0,0.5),
-            0 10px 30px rgba(0,0,0,0.4);
+        .h-root {
+          position: relative;
+          height: 100vh;
+          width: 100%;
+          overflow: hidden;
+          background: #060402;
         }
 
-        .hero-title-sub {
-          font-family: 'Playfair Display', serif;
-          font-size: clamp(0.9rem, 1.8vw, 1.6rem);
-          font-weight: 500;
-          color: #ffffff;
-          line-height: 1.2;
-          margin-top: 1.2rem;
-          letter-spacing: 0.4em;
-          text-transform: uppercase;
-          opacity: 1;
-          text-shadow: 0 4px 10px rgba(0,0,0,0.9);
-        }
-
-        .clarity-mask {
+        .h-video-wrap {
           position: absolute;
           inset: 0;
-          background: radial-gradient(
-            circle at center, 
-            rgba(0,0,0,0.3) 0%, 
-            rgba(0,0,0,0) 70%
-          );
-          z-index: 1;
+          opacity: 0;
+          transition: opacity 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .h-video-wrap.loaded {
+          opacity: 1;
+        }
+
+        .h-video-wrap video {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          display: block;
+        }
+
+        /* Luxury Cinematic Overlay - Refined for elegance */
+        .h-video-overlay {
+          position: absolute;
+          inset: 0;
+          z-index: 2;
           pointer-events: none;
+          /* Weaker, more delicate blur */
+          backdrop-filter: blur(1px);
+          -webkit-backdrop-filter: blur(1px);
+          /* Deeper edge contrast, clearer center */
+          background: radial-gradient(
+            circle at center,
+            rgba(255, 255, 255, 0.1) 0%,
+            rgba(0, 0, 0, 0.2) 100%
+          );
         }
 
-        .hero-scroll-line {
-          width: 1px;
-          height: 80px;
-          background: linear-gradient(to bottom, rgba(255,255,255,0), rgba(255,255,255,0.9), rgba(255,255,255,0));
-          animation: scrollDown 2.5s cubic-bezier(0.15, 1, 0.3, 1) infinite;
+        .h-text-container {
+          position: absolute;
+          inset: 0;
+          z-index: 5;
+          pointer-events: none;
+          display: flex;
+          align-items: center;
+          width: 100%;
+          padding: 0 clamp(1rem, 5vw, 8rem);
         }
 
-        @keyframes scrollDown {
-          0% { transform: translateY(-100%); opacity: 0; }
-          40% { opacity: 1; }
-          100% { transform: translateY(100%); opacity: 0; }
+        .h-overlay-text {
+          font-family: 'Anton', sans-serif;
+          color: #ffffff;
+          display: flex;
+          flex-direction: column;
+          margin: 0;
         }
 
-        @keyframes fadeInRise {
-          from { opacity: 0; transform: translateY(15px); }
-          to { opacity: 1; transform: translateY(0); }
+        .h-line-wrapper {
+          overflow: hidden;
+          display: block;
+          position: relative;
+          padding: 0.12em 0;
+          margin-top: -0.1em;
         }
 
-        .animated-text-container {
-          animation: fadeInRise 1.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-          will-change: transform, opacity;
+        .h-line-content {
+          display: block;
+          will-change: transform, filter, letter-spacing;
+          transition:
+            transform 0.9s cubic-bezier(0.2, 1, 0.2, 1),
+            filter 0.8s cubic-bezier(0.2, 1, 0.2, 1),
+            letter-spacing 1.2s cubic-bezier(0.1, 0.8, 0.2, 1);
         }
+
+        .h-text-left {
+          margin-right: auto;
+          font-size: clamp(2.8rem, 8vw, 6.5rem);
+          line-height: 0.95;
+        }
+
+        .h-text-right {
+          margin-left: auto;
+          font-size: clamp(2rem, 5.2vw, 4.2rem);
+          line-height: 1.05;
+          opacity: 0.92;
+        }
+
+        /* Reduced the text blur for a crisper, high-end feel */
+        .phase-enter .h-line-content {
+          transform: translateY(125%) rotateZ(2deg);
+          filter: blur(4px); 
+          letter-spacing: -0.03em;
+        }
+
+        .phase-stable .h-line-content {
+          transform: translateY(0%) rotateZ(0deg);
+          filter: blur(0px);
+          letter-spacing: 0.02em;
+        }
+
+        .phase-exit .h-line-content {
+          transform: translateY(-125%) rotateZ(-1deg);
+          filter: blur(2px);
+          letter-spacing: 0.04em;
+        }
+
+        .h-line-2 { transition-delay: 0.075s !important; }
+        .h-line-3 { transition-delay: 0.15s !important; }
       `}</style>
 
-      <section
-        style={{
-          position: "relative",
-          height: "100vh",
-          overflow: "hidden",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          backgroundColor: "#060402",
-        }}
-      >
-        {/* Background Image with Parallax */}
-        <div
-          style={{
-            position: "absolute",
-            inset: -40,
-            zIndex: 0,
-            transform: `translateY(${scrollY * 0.3}px)`,
-            willChange: "transform",
-            filter: "contrast(1.05) brightness(0.9)",
-          }}
-        >
-          {/* 3. Using Image instead of Video */}
-          <img 
-            src="/heroskyline.png" 
-            alt="Numara Skyline Background" 
-            style={{ width: "100%", height: "100%", objectFit: "cover" }}
-          />
-
-          {/* Commented out video source as requested
+      <section className="h-root">
+        <div className={`h-video-wrap${visible ? " loaded" : ""}`}>
           <video
-            ref={videoRef}
-            autoPlay 
-            loop 
-            muted 
-            playsInline 
+            autoPlay
+            loop
+            muted
+            playsInline
             preload="auto"
-            style={{ width: "100%", height: "100%", objectFit: "cover" }}
+            poster="/anzarelegance.png"
+            onCanPlay={() => setLoaded(true)}
           >
-            <source src="/skylinevid.mp4" type="video/mp4" />
-          </video> 
-          */}
+            <source src="/anzarelegancevid2.mp4" type="video/mp4" />
+          </video>
+          
+          <div className="h-video-overlay" />
         </div>
 
-        {/* 1. Subtle Center Clarity Mask */}
-        <div className="clarity-mask" />
+        <div className="h-text-container">
+          {showFirstText && (
+            <h1 className={`h-overlay-text h-text-left phase-${firstTextPhase}`}>
+              <span className="h-line-wrapper">
+                <span className="h-line-content h-line-1">Crafting</span>
+              </span>
+              <span className="h-line-wrapper">
+                <span className="h-line-content h-line-2">Legacies</span>
+              </span>
+            </h1>
+          )}
 
-        {/* 2. Soft Edge Vignette */}
-        <div
-          style={{
-            position: "absolute",
-            inset: 0,
-            zIndex: 2,
-            background: `
-              radial-gradient(circle at center, transparent 30%, rgba(0,0,0,0.5) 100%),
-              linear-gradient(to bottom, rgba(0,0,0,0.4) 0%, transparent 15%, transparent 85%, rgba(0,0,0,0.5) 100%)
-            `,
-            pointerEvents: "none",
-          }}
-        />
-
-        {/* 3. Floating Text */}
-        <div
-          className="animated-text-container"
-          style={{
-            position: "relative",
-            zIndex: 3,
-            textAlign: "center",
-            padding: "0 2rem",
-            transform: `translate(${mousePos.x * -10}px, ${mousePos.y * -10}px)`,
-            transition: "transform 0.4s ease-out", 
-          }}
-        >
-          <h1 className="hero-title-main">Crafting Legacies</h1>
-          <h2 className="hero-title-sub">One Landmark At A Time</h2>
-        </div>
-
-        {/* 4. Minimalist Scroll Indicator */}
-        <div
-          style={{
-            position: "absolute",
-            bottom: "60px",
-            left: "50%",
-            transform: "translateX(-50%)",
-            zIndex: 3,
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            opacity: Math.max(1 - scrollY / 400, 0),
-            transition: "opacity 0.4s ease",
-          }}
-        >
-          <span style={{
-            fontFamily: "'Lato', sans-serif",
-            fontSize: "0.6rem",
-            textTransform: "uppercase",
-            letterSpacing: "0.6em",
-            color: "rgba(255,255,255,0.6)",
-            fontWeight: 400,
-            marginBottom: "20px"
-          }}>
-            Explore
-          </span>
-          <div style={{ height: "80px", overflow: "hidden", width: "1px" }}>
-            <div className="hero-scroll-line" />
-          </div>
+          {showSecondText && (
+            <h1 className={`h-overlay-text h-text-right phase-${secondTextPhase}`}>
+              <span className="h-line-wrapper">
+                <span className="h-line-content h-line-1">One</span>
+              </span>
+              <span className="h-line-wrapper">
+                <span className="h-line-content h-line-2">Landmark At</span>
+              </span>
+              <span className="h-line-wrapper">
+                <span className="h-line-content h-line-3">A Time</span>
+              </span>
+            </h1>
+          )}
         </div>
       </section>
     </>
