@@ -66,13 +66,12 @@ export default function HeroSection() {
           z-index: 2;
           pointer-events: none;
           /* Weaker, more delicate blur */
-          backdrop-filter: blur(1px);
-          -webkit-backdrop-filter: blur(1px);
+       
           /* Deeper edge contrast, clearer center */
           background: radial-gradient(
             circle at center,
             rgba(255, 255, 255, 0.1) 0%,
-            rgba(0, 0, 0, 0.2) 100%
+            rgba(0, 0, 0, 0.3) 100%
           );
         }
 
