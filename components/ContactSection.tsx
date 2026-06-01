@@ -92,7 +92,7 @@ export function ContactSection() {
             maxWidth: "520px",
             margin: 0, 
           }}>
-            Discover living experiences you won't find anywhere else — thoughtfully designed to immerse you in the heart of luxury. Soulful stories waiting to be lived.
+            Discover living experiences you won&apos;t find anywhere else — thoughtfully designed to immerse you in the heart of luxury. Soulful stories waiting to be lived.
           </p>
 
         </div>
