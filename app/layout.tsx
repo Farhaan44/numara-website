@@ -15,12 +15,10 @@ export const metadata: Metadata = {
     apple: [{ url: "/apple-touch-icon.png" }],
   },
   manifest: "/site.webmanifest",
-  // Explicitly tell search engines they are welcome to crawl everything
   robots: {
     index: true,
     follow: true,
   },
-  // Rich link previews for iMessage, WhatsApp, and LinkedIn
   openGraph: {
     title: "Numara Group",
     description: "Crafting Legacies, One Landmark At A Time",
@@ -28,7 +26,7 @@ export const metadata: Metadata = {
     siteName: "Numara Group",
     images: [
       {
-        url: "https://www.numaragroup.com/anzarelegancehd.jpg", // Reuses your hero section's poster image!
+        url: "https://www.numaragroup.com/anzarelegancehd.jpg",
         width: 1200,
         height: 630,
         alt: "Numara Group - Luxury Real Estate Developments",
@@ -42,6 +40,21 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
+      <head>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "Organization",
+              "name": "Numara Group",
+              "url": "https://www.numaragroup.com",
+              "logo": "https://www.numaragroup.com/numarabrownlogo.png",
+              "description": "Crafting Legacies, One Landmark At A Time",
+            }),
+          }}
+        />
+      </head>
       <body>
         <LoaderProvider>
           <Navbar />
