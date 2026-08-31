@@ -1,11 +1,12 @@
-import Image from "next/image";
-import StatsSection from "@/components/StatsSection";
-import ProjectsSection from "@/components/ProjectsSection";
-import SlidingSection from "@/components/SlidingSection";
-import MapSection from "@/components/MapSection";
+import type { Metadata } from 'next';
 import { WhyPartnerSection } from "@/components/WhyPartnerSection";
 import { PartnerForm } from "@/components/PartnerForm";
 import { SectionDivider } from "@/components/SectionDivider";
+
+export const metadata: Metadata = {
+  title: "Partner With Us",
+  description: "Collaborate with Numara Group — opportunities for investors, collaborators, and partners.",
+};
 
 export default function Home() {
   return (

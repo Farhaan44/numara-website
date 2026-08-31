@@ -1,7 +1,16 @@
-
 import {ProjectTab} from "@/components/ProjectTab";
 import { SectionDivider } from "@/components/SectionDivider";
 import { CTASection } from "@/components/CTASection";
+
+import type { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: "Projects",
+  description: "Explore Numara Group's residential and commercial developments across Mumbai — from ongoing projects to completed landmarks.",
+};
+
+
+
 export default function Home() {
   return (
     <main>

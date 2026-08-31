@@ -1,8 +1,4 @@
-import Image from "next/image";
-import StatsSection from "@/components/StatsSection";
-import ProjectsSection from "@/components/ProjectsSection";
-import SlidingSection from "@/components/SlidingSection";
-import MapSection from "@/components/MapSection";
+import type { Metadata } from 'next';
 import TimelineSection from "@/components/TimelineSection";
 import NumaraStandard from "@/components/NumaraStandard";
 import Quote from "@/components/Quote";
@@ -10,7 +6,10 @@ import { SectionDivider } from "@/components/SectionDivider";
 import { FAQSection } from "@/components/FAQSection";
 import { CTASection } from "@/components/CTASection";
 
-
+export const metadata: Metadata = {
+  title: "About Us",
+  description: "Learn about Numara Group's 15+ years of experience in real estate development across Mumbai.",
+};
 
 export default function Home() {
   return (

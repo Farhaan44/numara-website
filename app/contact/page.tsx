@@ -1,12 +1,13 @@
-import Image from "next/image";
-import StatsSection from "@/components/StatsSection";
-import ProjectsSection from "@/components/ProjectsSection";
-import SlidingSection from "@/components/SlidingSection";
-import MapSection from "@/components/MapSection";
+import type { Metadata } from 'next';
 import { ContactSection } from "@/components/ContactSection";
 import InteractiveContactCards from "@/components/InteractiveContactCards";
 import { SectionDivider } from "@/components/SectionDivider";
 import ContactMapSection from "@/components/ContactMapSection";
+
+export const metadata: Metadata = {
+  title: "Contact Us",
+  description: "Get in touch with Numara Group. Visit our office in Agripada, Mumbai, or reach out directly.",
+};
 
 export default function Home() {
   return (
